@@ -5,6 +5,11 @@ import useScrollAnimation from './useScrollAnimation';
 import ecommerceImage from './assets/E-Commerce Platform.jpeg';
 import taskManagementImage from './assets/Task Management App.jpeg';
 import weatherDashboardImage from './assets/Weather Dashboard.jpeg';
+import africaOshImage from './assets/african.png';
+import talentedBrainzImage from './assets/talented.png';
+import jassanImage from './assets/jassn.PNG';
+import mindMateImage from './assets/mindmate.png';
+import greenfieldImage from './assets/greenfled.png';
 
 function Projects() {
   const [titleRef, titleVisible] = useScrollAnimation('projects');
@@ -16,52 +21,82 @@ function Projects() {
   const openImageModal = (image, title) => setSelectedImage({ image, title });
   const closeImageModal = () => setSelectedImage(null);
 
-  // Enhanced project data with more details
+  // Featured client projects and real work samples
   const projects = [
     {
       id: 1,
-      title: "E-Commerce Platform",
-      subtitle: "Full-Stack Shopping Solution",
-      description: "A comprehensive e-commerce platform featuring user authentication, product catalog, shopping cart, payment integration, and admin dashboard. Built with modern technologies for optimal performance.",
-      longDescription: "This project showcases a complete e-commerce ecosystem with features like user registration/login, product browsing with filters, shopping cart functionality, secure payment processing, order tracking, and a comprehensive admin panel for inventory management.",
-      technologies: ["React", "Node.js", "MongoDB", "Express", "Stripe", "JWT"],
-      image: ecommerceImage,
-      github: "https://github.com/yourusername/ecommerce-platform",
-      demo: "https://your-ecommerce-demo.netlify.app",
-      status: "Completed",
-      duration: "3 months",
-      features: ["User Authentication", "Payment Integration", "Admin Dashboard", "Responsive Design"],
-      color: "from-blue-500 to-purple-600"
+      title: "AfricaOSH",
+      subtitle: "Open Science & Innovation Ecosystem",
+      description: "A community-led platform for African open science, research collaboration, makerspaces, and innovation partnerships across the continent.",
+      longDescription: "AfricaOSH promotes open science hardware, collaborative innovation, and accessible scientific tools across Africa. The platform highlights community growth, partnerships, summits, and initiatives that help researchers, makers, institutions, and innovators work together to advance practical science for real world impact.",
+      technologies: ["Web Platform", "Community Growth", "Open Science", "Partnerships", "Events", "Innovation"],
+      image: africaOshImage,
+      github: "",
+      demo: "https://www.africaosh.com/",
+      status: "Live",
+      duration: "Community platform",
+      features: ["Open Science Advocacy", "Summits & Events", "Innovation Network", "Strategic Partnerships"],
+      color: "from-emerald-500 to-teal-600"
     },
     {
       id: 2,
-      title: "Task Management App",
-      subtitle: "Collaborative Productivity Tool",
-      description: "A real-time collaborative task management application with team features, project organization, deadline tracking, and instant notifications. Perfect for remote teams.",
-      longDescription: "Built for modern teams, this application provides real-time collaboration features including task assignment, progress tracking, team chat, file sharing, and comprehensive project analytics with beautiful data visualizations.",
-      technologies: ["React", "Socket.io", "PostgreSQL", "Tailwind CSS", "Redis", "Docker"],
-      image: taskManagementImage,
-      github: "https://github.com/yourusername/task-management",
-      demo: "https://your-task-app-demo.netlify.app",
-      status: "In Progress",
-      duration: "2 months",
-      features: ["Real-time Updates", "Team Collaboration", "File Sharing", "Analytics Dashboard"],
-      color: "from-green-500 to-teal-600"
+      title: "Talented Brainz Tech Hub",
+      subtitle: "Tech Education & Youth Empowerment",
+      description: "A modern digital presence for a Ghana-based innovation hub focused on AI, robotics, digital skills, and entrepreneurship for young people.",
+      longDescription: "Talented Brainz Tech Hub supports Ghanaian youth with digital skills training, AI and robotics education, makerspace learning, business consulting, and practical innovation programs designed to bridge the digital divide and create opportunity across communities.",
+      technologies: ["Education", "AI", "Robotics", "IoT", "Makerspace", "Branding"],
+      image: talentedBrainzImage,
+      github: "",
+      demo: "https://www.talentedbrainztech.com/",
+      status: "Live",
+      duration: "Training platform",
+      features: ["Digital Skills Training", "Robotics & IoT", "Makers Lodge", "Business Consulting"],
+      color: "from-cyan-500 to-blue-600"
     },
     {
       id: 3,
-      title: "Weather Dashboard",
-      subtitle: "Smart Weather Analytics",
-      description: "An intelligent weather application providing detailed forecasts, historical data analysis, weather maps, and personalized alerts. Features beautiful data visualizations.",
-      longDescription: "This weather dashboard combines multiple weather APIs to provide comprehensive weather information including 7-day forecasts, hourly predictions, weather maps, air quality data, and personalized weather alerts based on user preferences.",
-      technologies: ["JavaScript", "Chart.js", "Weather API", "CSS3", "LocalStorage", "PWA"],
-      image: weatherDashboardImage,
-      github: "https://github.com/yourusername/weather-dashboard",
-      demo: "https://your-weather-demo.netlify.app",
-      status: "Completed",
-      duration: "1 month",
-      features: ["Weather Maps", "7-Day Forecast", "Air Quality", "PWA Support"],
-      color: "from-orange-500 to-red-600"
+      title: "JASSAN Technologies",
+      subtitle: "STEM Education & Engineering Services",
+      description: "An innovation and electrical services company delivering STEM education, research, automation, and practical engineering solutions for African communities.",
+      longDescription: "JASSAN Technologies and Electrical Services combines hands-on STEM education, electrical and electronics services, curriculum development, IoT and smart automation, research, and component sales to help organizations and learners transform ideas into practical solutions.",
+      technologies: ["STEM", "Research", "IoT", "Automation", "Electrical", "Curriculum"],
+      image: jassanImage,
+      github: "",
+      demo: "https://jassan-innovations-hub.vercel.app/",
+      status: "Live",
+      duration: "Active business",
+      features: ["Robotics Education", "Electrical Services", "IoT Automation", "Research & Development"],
+      color: "from-violet-500 to-fuchsia-600"
+    },
+    {
+      id: 4,
+      title: "MindMate",
+      subtitle: "Mental Wellness Web App",
+      description: "A privacy-focused wellness web application that helps users track emotions, reflect on daily experiences, and access anonymous support in a safe digital space.",
+      longDescription: "MindMate is a web application designed to support emotional wellbeing through mood tracking, anonymous peer support, guided reflection, and motivational encouragement. It focuses on making mental health support more approachable, private, and user-friendly for people who want help without pressure or exposure.",
+      technologies: ["Web App", "Mental Wellness", "Anonymous Support", "Mood Tracking", "UX", "Wellbeing"],
+      image: mindMateImage,
+      github: "",
+      demo: "https://minemate-phi.vercel.app/",
+      status: "Live",
+      duration: "Wellness web app",
+      features: ["Mood Tracking", "Anonymous Support", "Private Experience", "Daily Guidance"],
+      color: "from-pink-500 to-rose-600"
+    },
+    {
+      id: 5,
+      title: "Greenfield Academy",
+      subtitle: "School Brand & Student Experience",
+      description: "A polished school website that presents admissions, academics, events, and student life while reinforcing a high-quality educational brand.",
+      longDescription: "Greenfield Academy presents a strong educational identity with a focus on admissions, academics, STEM learning, school culture, and a bright student experience. The platform helps families and students understand the school’s values, programs, and community experience.",
+      technologies: ["Education", "Admissions", "STEM", "School Brand", "Events", "Student Life"],
+      image: greenfieldImage,
+      github: "",
+      demo: "https://greenfieldacademy.vercel.app/",
+      status: "Live",
+      duration: "School website",
+      features: ["Admissions", "Academics", "STEM Lab", "Student Life"],
+      color: "from-amber-500 to-orange-600"
     }
   ];
 
@@ -235,21 +270,23 @@ function Projects() {
 
                     {/* Action Buttons */}
                     <div className="flex gap-4 pt-4">
-                      <a
-                        href={projects[activeProject].github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 bg-white/20 backdrop-blur-sm text-white py-3 px-6 rounded-lg text-center hover:bg-white/30 transition-all duration-300 font-medium"
-                      >
-                        View Code
-                      </a>
+                      {projects[activeProject].github && (
+                        <a
+                          href={projects[activeProject].github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 bg-white/20 backdrop-blur-sm text-white py-3 px-6 rounded-lg text-center hover:bg-white/30 transition-all duration-300 font-medium"
+                        >
+                          View Code
+                        </a>
+                      )}
                       <a
                         href={projects[activeProject].demo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex-1 bg-white text-gray-900 py-3 px-6 rounded-lg text-center hover:bg-gray-100 transition-all duration-300 font-medium"
+                        className={`${projects[activeProject].github ? 'flex-1' : 'w-full'} bg-white text-gray-900 py-3 px-6 rounded-lg text-center hover:bg-gray-100 transition-all duration-300 font-medium`}
                       >
-                        Live Demo
+                        {projects[activeProject].github ? 'Live Demo' : projects[activeProject].title === 'MindMate' ? 'Visit Web App' : 'Visit Website'}
                       </a>
                     </div>
                   </div>

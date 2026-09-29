@@ -137,8 +137,16 @@ const GooeyNav = ({
         detail: { sectionId }
       }));
 
-      // Update the URL hash
-      window.location.hash = item.href;
+      const pathSegments = window.location.pathname.split('/').filter(Boolean);
+      const currentPathSegment = pathSegments[pathSegments.length - 1];
+      if (items.some(navItem => navItem.href === `#${currentPathSegment}`)) {
+        pathSegments.pop();
+      }
+      const basePath = pathSegments.length ? `/${pathSegments.join('/')}` : '';
+      const nextPath = `${basePath}/${sectionId}`;
+      if (window.location.pathname !== nextPath) {
+        window.history.pushState({ sectionId }, '', nextPath);
+      }
 
       // Special handling for home section - scroll to top
       if (sectionId === 'home') {
@@ -170,11 +178,6 @@ const GooeyNav = ({
     }
 
     if (activeIndex === index) {
-      // Even if same index, still trigger animation by updating hash
-      if (item.href && item.href.startsWith('#')) {
-        // Force trigger hash change event
-        window.dispatchEvent(new HashChangeEvent('hashchange'));
-      }
       // Clear navigation flag if no scrolling needed
       setTimeout(() => setIsNavigating(false), 500);
       return;
@@ -210,6 +213,37 @@ const GooeyNav = ({
       }
     }
   };
+
+  useEffect(() => {
+    const navigateFromPath = () => {
+      const pathSegments = window.location.pathname.split('/').filter(Boolean);
+      const sectionId = pathSegments[pathSegments.length - 1] || 'home';
+      const sectionIndex = items.findIndex(item => item.href === `#${sectionId}`);
+      if (sectionIndex === -1) return;
+
+      setIsNavigating(true);
+      setActiveIndex(sectionIndex);
+      window.dispatchEvent(new CustomEvent('navigateToSection', {
+        detail: { sectionId }
+      }));
+
+      if (sectionId === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        document.getElementById(sectionId)?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+
+      setTimeout(() => setIsNavigating(false), 1000);
+    };
+
+    navigateFromPath();
+    window.addEventListener('popstate', navigateFromPath);
+    return () => window.removeEventListener('popstate', navigateFromPath);
+  }, [items]);
+
   // Scroll-based active section detection
   useEffect(() => {
     const handleScroll = () => {

@@ -132,31 +132,63 @@ function About() {
               <div className="about-mobile-text">
                 <h3 className="text-3xl font-bold mb-6 text-gray-800">Who I Am</h3>
                 <p className="text-gray-600 mb-6 text-xl leading-relaxed">
-                  I'm a passionate full-stack developer with a love for creating innovative solutions
-                  and bringing ideas to life through code. With experience in modern web technologies,
-                  I enjoy tackling complex problems and building user-friendly applications.
+                  I’m a passionate <span className="font-semibold text-gray-800">Full-Stack Developer and Computer Science graduate</span> who enjoys turning ideas into practical, user-friendly digital solutions.
                 </p>
                 <p className="text-gray-600 mb-8 text-xl leading-relaxed">
-                  When I'm not coding, you can find me exploring new technologies, contributing to
-                  open-source projects, or enjoying outdoor activities. I believe in continuous
-                  learning and staying up-to-date with the latest industry trends.
+                  I specialize in building modern and responsive web applications using <span className="font-semibold text-gray-800">HTML, CSS, JavaScript, React, Vite, Tailwind CSS, Django, and MongoDB</span>. I enjoy solving complex problems, creating intuitive user interfaces, connecting frontend applications with backend services, and working with databases. I’m also committed to continuous learning and keeping up with modern technologies in software development.
                 </p>
 
-                {/* Skills Tags */}
                 <div className="mb-6 sm:mb-10">
                   <h4 className="text-xl font-semibold mb-4 text-gray-800">Core Technologies</h4>
-                  <div className="flex flex-wrap gap-3 about-mobile-tags">
-                    <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-base font-medium">JavaScript</span>
-                    <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-base font-medium">React</span>
-                    <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-base font-medium">Node.js</span>
-                    <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-base font-medium">Python</span>
-                    <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-base font-medium">TypeScript</span>
-                    <span className="bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-base font-medium">MongoDB</span>
+
+                  <div className="space-y-6 text-gray-700">
+                    <div>
+                      <p className="font-semibold text-gray-800 mb-2">Frontend</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['HTML', 'CSS', 'JavaScript', 'React', 'Vite', 'Tailwind CSS'].map((item) => (
+                          <span key={item} className="bg-blue-100 text-blue-800 px-3 py-2 rounded-full text-sm font-medium">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold text-gray-800 mb-2">Backend</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['Django', 'REST APIs'].map((item) => (
+                          <span key={item} className="bg-emerald-100 text-emerald-800 px-3 py-2 rounded-full text-sm font-medium">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold text-gray-800 mb-2">Database</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['MongoDB', 'Supabase'].map((item) => (
+                          <span key={item} className="bg-violet-100 text-violet-800 px-3 py-2 rounded-full text-sm font-medium">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div>
+                      <p className="font-semibold text-gray-800 mb-2">Tools</p>
+                      <div className="flex flex-wrap gap-2">
+                        {['Git', 'GitHub', 'VS Code'].map((item) => (
+                          <span key={item} className="bg-amber-100 text-amber-800 px-3 py-2 rounded-full text-sm font-medium">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Quick Facts */}
               <div className="bg-white p-8 rounded-lg shadow-lg">
                 <h3 className="text-2xl font-semibold mb-6 text-gray-800">Quick Facts</h3>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -166,26 +198,38 @@ function About() {
                       Computer Science Graduate
                     </li>
                     <li className="flex items-center">
-                      <span className="text-2xl mr-3">💼</span>
-                      3+ Years of Development Experience
+                      <span className="text-2xl mr-3">💻</span>
+                      Full-Stack Developer
                     </li>
                     <li className="flex items-center">
-                      <span className="text-2xl mr-3">🌍</span>
-                      Remote Developer
+                      <span className="text-2xl mr-3">⚛️</span>
+                      React Developer
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-2xl mr-3">🐍</span>
+                      Django Backend
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-2xl mr-3">⚡</span>
+                      Supabase Backend
                     </li>
                   </ul>
                   <ul className="space-y-3 text-gray-600">
                     <li className="flex items-center">
-                      <span className="text-2xl mr-3">☕</span>
-                      Coffee Enthusiast
-                    </li>
-                    <li className="flex items-center">
-                      <span className="text-2xl mr-3">🎮</span>
-                      Gaming & Tech Lover
+                      <span className="text-2xl mr-3">🗄️</span>
+                      MongoDB &amp; Database Integration
                     </li>
                     <li className="flex items-center">
                       <span className="text-2xl mr-3">🚀</span>
-                      Always Learning
+                      Passionate about Building Digital Solutions
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-2xl mr-3">📚</span>
+                      Continuous Learner
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-2xl mr-3">🌍</span>
+                      Open to Remote Opportunities
                     </li>
                   </ul>
                 </div>
