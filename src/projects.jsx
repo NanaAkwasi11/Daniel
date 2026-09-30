@@ -10,6 +10,7 @@ import talentedBrainzImage from './assets/talented.PNG';
 import jassanImage from './assets/jassn.PNG';
 import mindMateImage from './assets/mindmate.png';
 import greenfieldImage from './assets/greenfled.png';
+import techNovaImage from './assets/laptop.PNG';
 
 function Projects() {
   const [titleRef, titleVisible] = useScrollAnimation('projects');
@@ -97,6 +98,21 @@ function Projects() {
       duration: "School website",
       features: ["Admissions", "Academics", "STEM Lab", "Student Life"],
       color: "from-amber-500 to-orange-600"
+    },
+    {
+      id: 6,
+      title: "TechNova Laptops",
+      subtitle: "Ghana's Trusted Online Laptop Store",
+      description: "An online laptop store offering brand-new and UK-used laptops for students, professionals, and gamers.",
+      longDescription: "TechNova makes it easy to shop for laptops online, with options for students, professionals, and gamers. Customers can browse featured models and enjoy free delivery in Accra, a six-month warranty, pay-on-delivery, and 24/7 support.",
+      technologies: ["E-Commerce", "Laptop Retail", "Online Shopping", "Customer Support"],
+      image: techNovaImage,
+      github: "",
+      demo: "https://technova-laptop-group-6.vercel.app/",
+      status: "Live",
+      duration: "E-commerce website",
+      features: ["Brand-New & UK-Used Laptops", "Free Delivery in Accra", "6-Month Warranty", "Pay on Delivery"],
+      color: "from-cyan-500 to-blue-600"
     }
   ];
 
