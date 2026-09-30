@@ -5,7 +5,6 @@ import { useState } from 'react';
 function About() {
   const [titleRef, titleVisible] = useScrollAnimation('about');
   const [imageRef, imageVisible] = useScrollAnimation('about');
-  const [contentRef, contentVisible] = useScrollAnimation('about');
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const openImageModal = () => setIsImageModalOpen(true);
@@ -126,8 +125,7 @@ function About() {
 
             {/* Content */}
             <div
-              ref={contentRef}
-              className={`lg:col-span-3 space-y-8 animate-slide-in-right ${contentVisible ? 'visible' : ''}`}
+              className="lg:col-span-3 space-y-8"
             >
               <div className="about-mobile-text">
                 <h3 className="text-3xl font-bold mb-6 text-gray-800">Who I Am</h3>
@@ -136,6 +134,9 @@ function About() {
                 </p>
                 <p className="text-gray-600 mb-8 text-xl leading-relaxed">
                   I specialize in building modern and responsive web applications using <span className="font-semibold text-gray-800">HTML, CSS, JavaScript, React, Vite, Tailwind CSS, Django, and MongoDB</span>. I enjoy solving complex problems, creating intuitive user interfaces, connecting frontend applications with backend services, and working with databases. I’m also committed to continuous learning and keeping up with modern technologies in software development.
+                </p>
+                <p className="text-gray-600 mb-8 text-xl leading-relaxed">
+                  Alongside web development, I create custom flyers and promotional graphics. I bring together clear messaging, thoughtful layouts, and engaging visuals to help ideas and events stand out. Selected examples of my flyer work are featured in the Projects section.
                 </p>
 
                 <div className="mb-6 sm:mb-10">
@@ -218,6 +219,10 @@ function About() {
                     <li className="flex items-center">
                       <span className="text-2xl mr-3">🗄️</span>
                       MongoDB &amp; Database Integration
+                    </li>
+                    <li className="flex items-center">
+                      <span className="text-2xl mr-3">🎨</span>
+                      Flyer &amp; Promotional Graphic Designer
                     </li>
                     <li className="flex items-center">
                       <span className="text-2xl mr-3">🚀</span>

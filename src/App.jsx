@@ -8,6 +8,7 @@ import Projects from './projects.jsx';
 import Skills from './skills.jsx';
 import Contact from './contact.jsx';
 import ContactAdmin from './ContactAdmin.jsx';
+import Work from './work.jsx';
 
 function App() {
   const [currentRoute, setCurrentRoute] = useState('home');
@@ -41,6 +42,14 @@ function App() {
     return (
       <ErrorBoundary>
         <ContactAdmin />
+      </ErrorBoundary>
+    );
+  }
+
+  if (window.location.pathname.replace(/\/+$/, '') === '/work') {
+    return (
+      <ErrorBoundary>
+        <Work />
       </ErrorBoundary>
     );
   }

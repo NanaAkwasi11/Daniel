@@ -127,15 +127,9 @@ function Home() {
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center w-full">
               <a
-                href="#projects"
-                onClick={(e) => {
-                  e.preventDefault();
-                  window.dispatchEvent(new CustomEvent('navigateToSection', { detail: { sectionId: 'projects' } }));
-                  window.location.hash = '#projects';
-                  setTimeout(() => {
-                    document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }, 100);
-                }}
+                href="/work"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="bg-yellow-400 text-black px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-yellow-300 transition text-center text-sm sm:text-base w-full sm:w-auto"
               >
                 View My Work

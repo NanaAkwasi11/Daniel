@@ -13,6 +13,8 @@ import {
   supabase
 } from './supabaseClient';
 import { sendEmailWithFallback, validateEmailConfig, testWeb3FormsConfig } from './emailService';
+import AdminProjects from './AdminProjects.jsx';
+import { isPortfolioProjectAdmin } from './projectService';
 
 function ContactAdmin() {
   const [submissions, setSubmissions] = useState([]);
@@ -36,6 +38,7 @@ function ContactAdmin() {
   // Navigation menu state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('messages');
+  const [canManageProjects, setCanManageProjects] = useState(false);
 
   // Supabase authentication states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -213,7 +216,7 @@ function ContactAdmin() {
 
   const handleSectionChange = (section) => {
     setActiveSection(section);
-    // Keep menu open when switching sections
+    closeMenu();
   };
 
   const handleMenuAction = (action) => {
@@ -288,6 +291,13 @@ function ContactAdmin() {
       description: 'Contact Form Submissions',
       type: 'section'
     },
+    ...(canManageProjects ? [{
+      id: 'projects',
+      label: 'Projects',
+      icon: '🗂️',
+      description: 'Portfolio Projects',
+      type: 'section'
+    }] : []),
     {
       id: 'settings',
       label: 'Settings',
@@ -362,6 +372,30 @@ function ContactAdmin() {
     if (isAuthenticated) {
       loadData();
     }
+  }, [isAuthenticated]);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    if (!isAuthenticated) {
+      setCanManageProjects(false);
+      return () => {
+        isCurrent = false;
+      };
+    }
+
+    isPortfolioProjectAdmin()
+      .then((isAdmin) => {
+        if (isCurrent) setCanManageProjects(isAdmin);
+      })
+      .catch((error) => {
+        console.error('Unable to check project administration access:', error);
+        if (isCurrent) setCanManageProjects(false);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
   }, [isAuthenticated]);
 
   const handleMarkAsRead = async (id) => {
@@ -653,7 +687,7 @@ function ContactAdmin() {
       </div>
 
       {/* Left Navigation Menu */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
+      <div className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col overflow-hidden bg-white shadow-xl transform transition-transform duration-300 ease-in-out ${
         isMenuOpen ? 'translate-x-0' : '-translate-x-full'
       }`}>
         {/* Menu Header */}
@@ -670,7 +704,7 @@ function ContactAdmin() {
         </div>
 
         {/* Menu Items */}
-        <nav className="p-4 space-y-4">
+        <nav className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-4 pb-24">
           {/* Navigation Sections */}
           <div className="space-y-2">
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-4">Sections</h3>
@@ -741,6 +775,10 @@ function ContactAdmin() {
       >
         {/* Modern Stats Cards */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {activeSection === 'projects' && canManageProjects ? (
+          <AdminProjects />
+        ) : (
+          <>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105">
             <div className="flex items-center justify-between">
@@ -991,6 +1029,8 @@ function ContactAdmin() {
             </div>
           )}
         </div>
+          </>
+        )}
       </div>
 
       {/* Modern Message Detail Modal */}

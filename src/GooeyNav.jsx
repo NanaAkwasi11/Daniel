@@ -137,15 +137,8 @@ const GooeyNav = ({
         detail: { sectionId }
       }));
 
-      const pathSegments = window.location.pathname.split('/').filter(Boolean);
-      const currentPathSegment = pathSegments[pathSegments.length - 1];
-      if (items.some(navItem => navItem.href === `#${currentPathSegment}`)) {
-        pathSegments.pop();
-      }
-      const basePath = pathSegments.length ? `/${pathSegments.join('/')}` : '';
-      const nextPath = `${basePath}/${sectionId}`;
-      if (window.location.pathname !== nextPath) {
-        window.history.pushState({ sectionId }, '', nextPath);
+      if (window.location.hash !== `#${sectionId}`) {
+        window.location.hash = sectionId;
       }
 
       // Special handling for home section - scroll to top

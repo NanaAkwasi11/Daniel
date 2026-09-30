@@ -1,16 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useScrollAnimation from './useScrollAnimation';
-
-// Import project images
-import ecommerceImage from './assets/E-Commerce Platform.jpeg';
-import taskManagementImage from './assets/Task Management App.jpeg';
-import weatherDashboardImage from './assets/Weather Dashboard.jpeg';
-import africaOshImage from './assets/african.PNG';
-import talentedBrainzImage from './assets/talented.PNG';
-import jassanImage from './assets/jassn.PNG';
-import mindMateImage from './assets/mindmate.png';
-import greenfieldImage from './assets/greenfled.png';
-import techNovaImage from './assets/laptop.PNG';
+import { projectEntries } from './projectsData';
+import { getPublishedProjectAdditions } from './projectService';
 
 function Projects() {
   const [titleRef, titleVisible] = useScrollAnimation('projects');
@@ -22,99 +13,21 @@ function Projects() {
   const openImageModal = (image, title) => setSelectedImage({ image, title });
   const closeImageModal = () => setSelectedImage(null);
 
-  // Featured client projects and real work samples
-  const projects = [
-    {
-      id: 1,
-      title: "AfricaOSH",
-      subtitle: "Open Science & Innovation Ecosystem",
-      description: "A community-led platform for African open science, research collaboration, makerspaces, and innovation partnerships across the continent.",
-      longDescription: "AfricaOSH promotes open science hardware, collaborative innovation, and accessible scientific tools across Africa. The platform highlights community growth, partnerships, summits, and initiatives that help researchers, makers, institutions, and innovators work together to advance practical science for real world impact.",
-      technologies: ["Web Platform", "Community Growth", "Open Science", "Partnerships", "Events", "Innovation"],
-      image: africaOshImage,
-      github: "",
-      demo: "https://www.africaosh.com/",
-      status: "Live",
-      duration: "Community platform",
-      features: ["Open Science Advocacy", "Summits & Events", "Innovation Network", "Strategic Partnerships"],
-      color: "from-emerald-500 to-teal-600"
-    },
-    {
-      id: 2,
-      title: "Talented Brainz Tech Hub",
-      subtitle: "Tech Education & Youth Empowerment",
-      description: "A modern digital presence for a Ghana-based innovation hub focused on AI, robotics, digital skills, and entrepreneurship for young people.",
-      longDescription: "Talented Brainz Tech Hub supports Ghanaian youth with digital skills training, AI and robotics education, makerspace learning, business consulting, and practical innovation programs designed to bridge the digital divide and create opportunity across communities.",
-      technologies: ["Education", "AI", "Robotics", "IoT", "Makerspace", "Branding"],
-      image: talentedBrainzImage,
-      github: "",
-      demo: "https://www.talentedbrainztech.com/",
-      status: "Live",
-      duration: "Training platform",
-      features: ["Digital Skills Training", "Robotics & IoT", "Makers Lodge", "Business Consulting"],
-      color: "from-cyan-500 to-blue-600"
-    },
-    {
-      id: 3,
-      title: "JASSAN Technologies",
-      subtitle: "STEM Education & Engineering Services",
-      description: "An innovation and electrical services company delivering STEM education, research, automation, and practical engineering solutions for African communities.",
-      longDescription: "JASSAN Technologies and Electrical Services combines hands-on STEM education, electrical and electronics services, curriculum development, IoT and smart automation, research, and component sales to help organizations and learners transform ideas into practical solutions.",
-      technologies: ["STEM", "Research", "IoT", "Automation", "Electrical", "Curriculum"],
-      image: jassanImage,
-      github: "",
-      demo: "https://jassan-innovations-hub.vercel.app/",
-      status: "Live",
-      duration: "Active business",
-      features: ["Robotics Education", "Electrical Services", "IoT Automation", "Research & Development"],
-      color: "from-violet-500 to-fuchsia-600"
-    },
-    {
-      id: 4,
-      title: "MindMate",
-      subtitle: "Mental Wellness Web App",
-      description: "A privacy-focused wellness web application that helps users track emotions, reflect on daily experiences, and access anonymous support in a safe digital space.",
-      longDescription: "MindMate is a web application designed to support emotional wellbeing through mood tracking, anonymous peer support, guided reflection, and motivational encouragement. It focuses on making mental health support more approachable, private, and user-friendly for people who want help without pressure or exposure.",
-      technologies: ["Web App", "Mental Wellness", "Anonymous Support", "Mood Tracking", "UX", "Wellbeing"],
-      image: mindMateImage,
-      github: "",
-      demo: "https://minemate-phi.vercel.app/",
-      status: "Live",
-      duration: "Wellness web app",
-      features: ["Mood Tracking", "Anonymous Support", "Private Experience", "Daily Guidance"],
-      color: "from-pink-500 to-rose-600"
-    },
-    {
-      id: 5,
-      title: "Greenfield Academy",
-      subtitle: "School Brand & Student Experience",
-      description: "A polished school website that presents admissions, academics, events, and student life while reinforcing a high-quality educational brand.",
-      longDescription: "Greenfield Academy presents a strong educational identity with a focus on admissions, academics, STEM learning, school culture, and a bright student experience. The platform helps families and students understand the school’s values, programs, and community experience.",
-      technologies: ["Education", "Admissions", "STEM", "School Brand", "Events", "Student Life"],
-      image: greenfieldImage,
-      github: "",
-      demo: "https://greenfieldacademy.vercel.app/",
-      status: "Live",
-      duration: "School website",
-      features: ["Admissions", "Academics", "STEM Lab", "Student Life"],
-      color: "from-amber-500 to-orange-600"
-    },
-    {
-      id: 6,
-      title: "TechNova Laptops",
-      subtitle: "Ghana's Trusted Online Laptop Store",
-      description: "An online laptop store offering brand-new and UK-used laptops for students, professionals, and gamers.",
-      longDescription: "TechNova makes it easy to shop for laptops online, with options for students, professionals, and gamers. Customers can browse featured models and enjoy free delivery in Accra, a six-month warranty, pay-on-delivery, and 24/7 support.",
-      technologies: ["E-Commerce", "Laptop Retail", "Online Shopping", "Customer Support"],
-      image: techNovaImage,
-      github: "",
-      demo: "https://technova-laptop-group-6.vercel.app/",
-      status: "Live",
-      duration: "E-commerce website",
-      features: ["Brand-New & UK-Used Laptops", "Free Delivery in Accra", "6-Month Warranty", "Pay on Delivery"],
-      color: "from-cyan-500 to-blue-600"
-    }
-  ];
+  const [projects, setProjects] = useState(projectEntries);
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    getPublishedProjectAdditions()
+      .then((additions) => {
+        if (isCurrent) setProjects([...projectEntries, ...additions]);
+      })
+      .catch((error) => console.error('Unable to load additional projects:', error));
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
 
   // Auto-play functionality
   useEffect(() => {
@@ -215,12 +128,14 @@ function Projects() {
 
       <section id="projects" className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black py-20 md:pt-32 text-white">
         <div className="w-screen max-w-none px-0 sm:px-4" style={{ width: '100vw' }}>
-          <h2
-            ref={titleRef}
-            className={`text-xl sm:text-2xl lg:text-4xl font-bold text-center mb-4 sm:mb-8 lg:mb-16 text-white animate-fade-in-up ${titleVisible ? 'visible' : ''}`}
-          >
-            Featured Projects
-          </h2>
+          <div className="max-w-7xl mx-auto px-4 mb-8">
+            <h2
+              ref={titleRef}
+              className={`text-xl sm:text-2xl lg:text-4xl font-bold text-center text-white animate-fade-in-up ${titleVisible ? 'visible' : ''}`}
+            >
+              Featured Projects
+            </h2>
+          </div>
 
           {/* Main Project Showcase */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -285,6 +200,7 @@ function Projects() {
                     </div>
 
                     {/* Action Buttons */}
+                    {(projects[activeProject].github || projects[activeProject].demo) && (
                     <div className="flex gap-4 pt-4">
                       {projects[activeProject].github && (
                         <a
@@ -296,15 +212,16 @@ function Projects() {
                           View Code
                         </a>
                       )}
-                      <a
+                      {projects[activeProject].demo && <a
                         href={projects[activeProject].demo}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`${projects[activeProject].github ? 'flex-1' : 'w-full'} bg-white text-gray-900 py-3 px-6 rounded-lg text-center hover:bg-gray-100 transition-all duration-300 font-medium`}
                       >
                         {projects[activeProject].github ? 'Live Demo' : projects[activeProject].title === 'MindMate' ? 'Visit Web App' : 'Visit Website'}
-                      </a>
+                      </a>}
                     </div>
+                    )}
                   </div>
 
                   {/* Project Image */}
@@ -317,7 +234,7 @@ function Projects() {
                       <img
                         src={projects[activeProject].image}
                         alt={projects[activeProject].title}
-                        className="w-full h-64 lg:h-80 object-cover rounded-xl shadow-2xl group-hover:scale-105 transition-transform duration-500"
+                        className={`w-full h-64 lg:h-80 ${projects[activeProject].isFlyer ? 'object-contain bg-white p-2' : 'object-cover'} rounded-xl shadow-2xl group-hover:scale-105 transition-transform duration-500`}
                       />
                       <div className="absolute inset-0 bg-black/20 rounded-xl group-hover:bg-black/10 transition-colors duration-300"></div>
                       <div className="absolute bottom-4 right-4 bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">

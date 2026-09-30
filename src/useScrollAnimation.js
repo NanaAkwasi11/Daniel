@@ -13,7 +13,6 @@ const useScrollAnimation = (sectionId, threshold = 0.2, rootMargin = '0px 0px -5
           setIsVisible(true);
         } else {
           console.log(`Section ${sectionId} is no longer visible - resetting for re-trigger`);
-          // Reset animations when scrolling away to allow re-triggering
           setIsVisible(false);
         }
       },
