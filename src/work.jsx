@@ -1,9 +1,9 @@
 import { Fragment, useEffect, useState } from 'react';
-import { projectEntries } from './projectsData';
+import { projectEntries, workOnlyEntries } from './projectsData';
 import { getPublishedProjectAdditions } from './projectService';
 
 function Work() {
-  const [projects, setProjects] = useState(projectEntries);
+  const [projects, setProjects] = useState([...projectEntries, ...workOnlyEntries]);
   const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ function Work() {
 
     getPublishedProjectAdditions()
       .then((additions) => {
-        if (isCurrent) setProjects([...projectEntries, ...additions]);
+        if (isCurrent) setProjects([...projectEntries, ...workOnlyEntries, ...additions]);
       })
       .catch((error) => console.error('Unable to load additional projects:', error));
 
@@ -72,7 +72,7 @@ function Work() {
               <button
                 type="button"
                 onClick={() => setSelectedImage({ image: project.image, title: project.title })}
-                className="block w-full overflow-hidden bg-black/30 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
+                className="block w-full cursor-pointer overflow-hidden bg-black/30 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
                 aria-label={`Enlarge image for ${project.title}`}
               >
                 <div className="aspect-[16/10] w-full">

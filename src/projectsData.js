@@ -6,6 +6,10 @@ import greenfieldImage from './assets/greenfled.png';
 import techNovaImage from './assets/laptop.PNG';
 import danielFlyerImage from './assets/daniel.jpeg';
 import emmaFlyerImage from './assets/emma.png';
+import adomaOneImage from './assets/adoma 1.png';
+import adomaTwoImage from './assets/adoma 2.png';
+import ceremonyFlyerImage from './assets/Naming ceremony.png';
+import revOscarFlyerImage from './assets/REV oscar.png';
 
 export const projectEntries = [
   {
@@ -129,5 +133,72 @@ export const projectEntries = [
     duration: "Graphic design",
     features: ["Custom Flyer Design", "Promotional Visual"],
     color: "from-pink-500 to-rose-600"
+  },
+];
+
+export const workOnlyEntries = [
+  {
+    id: 9,
+    title: "Ceremony",
+    subtitle: "Event Flyer Design",
+    description: "A promotional flyer for a ceremony event with a polished event-brand look.",
+    longDescription: "This flyer combines event details, an elegant visual style, and strong promotional hierarchy to present a ceremony in a memorable way.",
+    technologies: ["Graphic Design", "Flyer Design", "Event Promotion"],
+    image: ceremonyFlyerImage,
+    isFlyer: true,
+    github: "",
+    demo: "",
+    status: "Design Sample",
+    duration: "Graphic design",
+    features: ["Ceremony Event Promotion", "Elegant Visual Layout", "Custom Event Branding"],
+    color: "from-amber-500 to-orange-600"
+  },
+  {
+    id: 10,
+    title: "Rev Oscar",
+    subtitle: "Event Flyer Design",
+    description: "A flyer sample for a Rev. Oscar themed event or announcement design.",
+    longDescription: "This design focuses on clear messaging, strong contrast, and a presentation-ready layout for an event announcement or community occasion.",
+    technologies: ["Graphic Design", "Flyer Design", "Event Invitation"],
+    image: revOscarFlyerImage,
+    isFlyer: true,
+    github: "",
+    demo: "",
+    status: "Design Sample",
+    duration: "Graphic design",
+    features: ["Event Announcement", "Clean Layout", "Strong Messaging"],
+    color: "from-violet-500 to-fuchsia-600"
+  },
+  {
+    id: 11,
+    title: "Adoma 1",
+    subtitle: "Visual Design Sample",
+    description: "A poster/flyer concept included in the work gallery only.",
+    longDescription: "This design was added to the portfolio work view and kept out of the homepage project showcase.",
+    technologies: ["Graphic Design", "Poster Design", "Brand Visuals"],
+    image: adomaOneImage,
+    isFlyer: true,
+    github: "",
+    demo: "",
+    status: "Design Sample",
+    duration: "Graphic design",
+    features: ["Poster Artwork", "Visual Storytelling", "Custom Design"],
+    color: "from-orange-500 to-red-600"
+  },
+  {
+    id: 12,
+    title: "Adoma 2",
+    subtitle: "Visual Design Sample",
+    description: "A second poster/flyer concept included in the work gallery only.",
+    longDescription: "This design supplements the Adoma concept collection and remains part of the dedicated work gallery instead of the homepage featured projects.",
+    technologies: ["Graphic Design", "Poster Design", "Brand Visuals"],
+    image: adomaTwoImage,
+    isFlyer: true,
+    github: "",
+    demo: "",
+    status: "Design Sample",
+    duration: "Graphic design",
+    features: ["Poster Artwork", "Visual Storytelling", "Custom Design"],
+    color: "from-teal-500 to-cyan-600"
   }
 ];
