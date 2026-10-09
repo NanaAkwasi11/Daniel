@@ -4,11 +4,11 @@ function Navbar() {
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white font-bold text-xl">Portfolio</div>
         <div className="hidden md:flex space-x-6">
-          <a href="#home" className="text-white hover:text-yellow-200 transition">Home</a>
-          <a href="#about" className="text-white hover:text-yellow-200 transition">About</a>
-          <a href="#projects" className="text-white hover:text-yellow-200 transition">Projects</a>
-          <a href="#skills" className="text-white hover:text-yellow-200 transition">Skills</a>
-          <a href="#contact" className="text-white hover:text-yellow-200 transition">Contact</a>
+          <a href="/" className="text-white hover:text-yellow-200 transition">Home</a>
+          <a href="/about" className="text-white hover:text-yellow-200 transition">About</a>
+          <a href="/projects" className="text-white hover:text-yellow-200 transition">Projects</a>
+          <a href="/skills" className="text-white hover:text-yellow-200 transition">Skills</a>
+          <a href="/contact" className="text-white hover:text-yellow-200 transition">Contact</a>
         </div>
         <div className="md:hidden">
           {/* Mobile menu button */}

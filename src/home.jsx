@@ -135,14 +135,12 @@ function Home() {
                 View My Work
               </a>
               <a
-                href="#contact"
+                href="/contact"
                 onClick={(e) => {
                   e.preventDefault();
+                  window.history.pushState({}, '', '/contact');
                   window.dispatchEvent(new CustomEvent('navigateToSection', { detail: { sectionId: 'contact' } }));
-                  window.location.hash = '#contact';
-                  setTimeout(() => {
-                    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }, 100);
+                  document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
                 className="border-2 border-yellow-400 text-yellow-400 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold hover:bg-yellow-400 hover:text-black transition text-center text-sm sm:text-base w-full sm:w-auto"
               >

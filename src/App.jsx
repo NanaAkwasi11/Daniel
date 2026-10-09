@@ -9,31 +9,33 @@ import Skills from './skills.jsx';
 import Contact from './contact.jsx';
 import ContactAdmin from './ContactAdmin.jsx';
 import Work from './work.jsx';
+import { resolveRoute } from './routeUtils.js';
 
 function App() {
-  const [currentRoute, setCurrentRoute] = useState('home');
+  const [currentRoute, setCurrentRoute] = useState(() => resolveRoute(window.location.pathname, window.location.hash));
 
   // Navigation items for GooeyNav
   const navItems = [
-    { label: "Home", href: "#home" },
-    { label: "About", href: "#about" },
-    { label: "Projects", href: "#projects" },
-    { label: "Skills", href: "#skills" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
+    { label: "Projects", href: "/projects" },
+    { label: "Skills", href: "/skills" },
+    { label: "Contact", href: "/contact" },
   ];
 
-  // Simple hash routing
+  // Route updates using the clean URL path instead of hash fragments.
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.substring(1) || 'home';
-      setCurrentRoute(hash);
+    const handleRouteChange = () => {
+      setCurrentRoute(resolveRoute(window.location.pathname, window.location.hash));
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
+    handleRouteChange();
+    window.addEventListener('hashchange', handleRouteChange);
+    window.addEventListener('popstate', handleRouteChange);
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('hashchange', handleRouteChange);
+      window.removeEventListener('popstate', handleRouteChange);
     };
   }, []);
 
@@ -46,7 +48,7 @@ function App() {
     );
   }
 
-  if (window.location.pathname.replace(/\/+$/, '') === '/work') {
+  if (currentRoute === 'work') {
     return (
       <ErrorBoundary>
         <Work />

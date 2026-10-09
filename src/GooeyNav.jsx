@@ -117,67 +117,43 @@ const GooeyNav = ({
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  const getSectionIdFromHref = (href = '') => {
+    if (!href) return 'home';
+    return href.replace(/^#/, '').replace(/^\/+/, '').replace(/\/+$/, '') || 'home';
+  };
+
+  const syncActiveIndexFromRoute = () => {
+    const currentPath = window.location.pathname.split('/').filter(Boolean).pop() || 'home';
+    const routeIndex = items.findIndex(item => getSectionIdFromHref(item.href) === currentPath);
+    if (routeIndex !== -1) {
+      setActiveIndex(routeIndex);
+    }
+  };
+
   const handleClick = (e, index) => {
     e.preventDefault();
     const liEl = e.currentTarget;
     const item = items[index];
 
-    // Close mobile menu when a link is clicked
-    setIsMobileMenuOpen(false);
+    if (!item?.href) return;
 
-    // Set navigation flag to prevent scroll detection interference
+    setIsMobileMenuOpen(false);
     setIsNavigating(true);
 
-    // Navigate to the section
-    if (item.href && item.href.startsWith('#')) {
-      const sectionId = item.href.substring(1);
+    const sectionId = getSectionIdFromHref(item.href);
+    const targetPath = sectionId === 'home' ? '/' : `/${sectionId}`;
+    const targetElement = document.getElementById(sectionId);
 
-      // Dispatch custom event for animation trigger
-      window.dispatchEvent(new CustomEvent('navigateToSection', {
-        detail: { sectionId }
-      }));
-
-      if (window.location.hash !== `#${sectionId}`) {
-        window.location.hash = sectionId;
-      }
-
-      // Special handling for home section - scroll to top
-      if (sectionId === 'home') {
-        setTimeout(() => {
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-          // Clear navigation flag after scroll completes
-          setTimeout(() => setIsNavigating(false), 1000);
-        }, 100);
-      } else {
-        // Then scroll to the section with a small delay to allow animation reset
-        setTimeout(() => {
-          const targetElement = document.querySelector(item.href);
-          if (targetElement) {
-            targetElement.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
-            });
-          }
-          // Clear navigation flag after scroll completes
-          setTimeout(() => setIsNavigating(false), 1000);
-        }, 100);
-      }
-    } else if (item.href) {
-      window.location.href = item.href;
-      setIsNavigating(false);
-    }
-
-    if (activeIndex === index) {
-      // Clear navigation flag if no scrolling needed
-      setTimeout(() => setIsNavigating(false), 500);
-      return;
-    }
-
+    window.history.pushState({}, '', targetPath);
     setActiveIndex(index);
     updateEffectPosition(liEl);
+
+    if (sectionId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     if (filterRef.current) {
       const particles = filterRef.current.querySelectorAll(".particle");
       particles.forEach((p) => filterRef.current.removeChild(p));
@@ -190,6 +166,8 @@ const GooeyNav = ({
     if (filterRef.current) {
       makeParticles(filterRef.current);
     }
+
+    setTimeout(() => setIsNavigating(false), 250);
   };
   const handleKeyDown = (
     e,
@@ -208,157 +186,19 @@ const GooeyNav = ({
   };
 
   useEffect(() => {
-    const navigateFromPath = () => {
-      const pathSegments = window.location.pathname.split('/').filter(Boolean);
-      const sectionId = pathSegments[pathSegments.length - 1] || 'home';
-      const sectionIndex = items.findIndex(item => item.href === `#${sectionId}`);
-      if (sectionIndex === -1) return;
-
-      setIsNavigating(true);
-      setActiveIndex(sectionIndex);
-      window.dispatchEvent(new CustomEvent('navigateToSection', {
-        detail: { sectionId }
-      }));
-
-      if (sectionId === 'home') {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        document.getElementById(sectionId)?.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
-      }
-
-      setTimeout(() => setIsNavigating(false), 1000);
+    const handleRouteChange = () => {
+      syncActiveIndexFromRoute();
     };
 
-    navigateFromPath();
-    window.addEventListener('popstate', navigateFromPath);
-    return () => window.removeEventListener('popstate', navigateFromPath);
-  }, [items]);
-
-  // Scroll-based active section detection
-  useEffect(() => {
-    const handleScroll = () => {
-      // Skip scroll detection if currently navigating via click
-      if (isNavigating) {
-        return;
-      }
-
-      // DYNAMIC APPROACH: Use the actual items array order
-      const scrollY = window.scrollY;
-      let newActiveIndex = 0; // Default to first item (Home)
-
-      // Get all sections in the order they appear in the items array
-      const sections = [];
-      items.forEach((item, index) => {
-        if (item.href && item.href.startsWith('#')) {
-          const element = document.querySelector(item.href);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            const offsetTop = rect.top + scrollY;
-            sections.push({
-              index,
-              name: item.label,
-              offsetTop,
-              element
-            });
-          }
-        }
-      });
-
-      if (sections.length === 0) {
-        console.log('No sections found');
-        return;
-      }
-
-      console.log(`Section positions:`, sections.map(s => `${s.name} (index ${s.index}): ${s.offsetTop}px`).join(', '));
-      console.log(`Current scroll: ${scrollY}px`);
-      console.log(`Items array:`, items.map((item, index) => `${index}: ${item.label}`).join(', '));
-      console.log(`Current activeIndex: ${activeIndexRef.current} (${items[activeIndexRef.current]?.label})`);
-
-      // SIMPLIFIED AND IMPROVED HOME DETECTION
-      const aboutSection = sections.find(s => s.index === 1);
-      const viewportHeight = window.innerHeight;
-
-      // Calculate a more reliable home threshold
-      // Use the About section position as reference, or fallback to viewport-based calculation
-      let homeEndThreshold;
-      if (aboutSection) {
-        // Home section ends when we're halfway to the About section
-        homeEndThreshold = aboutSection.offsetTop * 0.5;
-      } else {
-        // Fallback: use viewport height as threshold
-        homeEndThreshold = viewportHeight * 0.8;
-      }
-
-      console.log(`Home end threshold: ${homeEndThreshold}px, About section at: ${aboutSection?.offsetTop || 'N/A'}px`);
-
-      // STEP 1: Check if we're in the Home section (top area)
-      if (scrollY < homeEndThreshold) {
-        newActiveIndex = 0;
-        console.log(`In Home section (${scrollY}px < ${homeEndThreshold}px threshold)`);
-      }
-      // STEP 2: Check other sections from bottom to top
-      else {
-        // Start with the assumption we're in the last section
-        newActiveIndex = sections.length - 1;
-
-        // Check each section from bottom to top to find which one we're actually in
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const section = sections[i];
-
-          // Skip home section since we handled it above
-          if (section.index === 0) continue;
-
-          // Calculate buffer based on section
-          let buffer = 150; // Standard buffer
-          if (section.index === 1) { // About section
-            buffer = 100; // Smaller buffer for About to make it easier to trigger
-          }
-
-          // Check if we've scrolled past this section's trigger point
-          if (scrollY >= section.offsetTop - buffer) {
-            newActiveIndex = section.index;
-            console.log(`Scrolled into ${section.name} at ${scrollY}px (trigger: ${section.offsetTop - buffer}px, actual top: ${section.offsetTop}px)`);
-            break;
-          }
-        }
-      }
-
-      console.log(`Scroll: ${scrollY}px -> Section: ${items[newActiveIndex]?.label}`);
-
-      // Update if changed
-      if (newActiveIndex !== activeIndexRef.current) {
-        console.log(`Changing from ${items[activeIndexRef.current]?.label} to ${items[newActiveIndex]?.label}`);
-        setActiveIndex(newActiveIndex);
-      }
-    };
-
-    // Throttle scroll events for better performance
-    let ticking = false;
-    const throttledHandleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          handleScroll();
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener('scroll', throttledHandleScroll);
-
-    // Initial check after a longer delay to ensure DOM is ready and avoid overriding initial state
-    setTimeout(() => {
-      console.log('Running initial scroll check...');
-      handleScroll();
-    }, 1000);
+    handleRouteChange();
+    window.addEventListener('popstate', handleRouteChange);
+    window.addEventListener('hashchange', handleRouteChange);
 
     return () => {
-      window.removeEventListener('scroll', throttledHandleScroll);
+      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener('hashchange', handleRouteChange);
     };
-  }, [items, isNavigating]); // Removed activeIndex to prevent excessive re-renders
+  }, [items]);
 
   // Close mobile menu when clicking on the backdrop
   useEffect(() => {
@@ -395,30 +235,25 @@ const GooeyNav = ({
     };
   }, [isMobileMenuOpen]);
 
-  // Handle hash changes to update active state
+  // Keep active state aligned with the current clean URL.
   useEffect(() => {
-    const handleHashChange = () => {
-      const currentHash = window.location.hash.substring(1);
-      if (currentHash) {
-        const hashIndex = items.findIndex(item =>
-          item.href && item.href.substring(1) === currentHash
-        );
-        if (hashIndex !== -1 && hashIndex !== activeIndexRef.current) {
-          console.log(`Hash change detected - updating active section to: ${items[hashIndex]?.label}`);
-          setActiveIndex(hashIndex);
-        }
+    const handleRouteSync = () => {
+      const currentPath = window.location.pathname.split('/').filter(Boolean).pop() || 'home';
+      const routeIndex = items.findIndex(item => getSectionIdFromHref(item.href) === currentPath);
+      if (routeIndex !== -1 && routeIndex !== activeIndexRef.current) {
+        setActiveIndex(routeIndex);
       }
     };
 
-    // Check initial hash on mount
-    handleHashChange();
-
-    window.addEventListener('hashchange', handleHashChange);
+    handleRouteSync();
+    window.addEventListener('popstate', handleRouteSync);
+    window.addEventListener('hashchange', handleRouteSync);
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange);
+      window.removeEventListener('popstate', handleRouteSync);
+      window.removeEventListener('hashchange', handleRouteSync);
     };
-  }, [items]); // Removed activeIndex to prevent excessive re-renders
+  }, [items]);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
