@@ -25,13 +25,13 @@ function Work() {
   const groupedProjects = [...websiteProjects, ...flyerProjects];
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white">
-      <header className="border-b border-white/10">
+    <main className="min-h-screen bg-white text-gray-900">
+      <header className="border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-5 sm:px-8 py-5 flex items-center justify-between gap-4">
-          <a href="/" className="font-semibold text-white hover:text-amber-300 transition-colors">
-            Daniel <span className="text-amber-300">/</span> Portfolio
+          <a href="/" className="font-semibold text-gray-900 hover:text-amber-700 transition-colors">
+            Daniel <span className="text-amber-700">/</span> Portfolio
           </a>
-          <a href="/" className="text-sm text-gray-300 hover:text-white transition-colors">
+          <a href="/" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">
             Back to home
           </a>
         </div>
@@ -39,12 +39,12 @@ function Work() {
 
       <section className="max-w-7xl mx-auto px-5 sm:px-8 pt-12 sm:pt-16 pb-20">
         <div className="mb-9 sm:mb-12">
-          <p className="text-sm font-semibold uppercase tracking-wider text-amber-300 mb-3">
+          <p className="text-sm font-semibold uppercase tracking-wider text-amber-700 mb-3">
             Portfolio / {projects.length} selected works
           </p>
           <div className="max-w-3xl">
             <h1 className="text-3xl sm:text-4xl font-bold mb-4">Selected Work</h1>
-            <p className="text-gray-300 text-base sm:text-lg leading-relaxed">
+            <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               Websites, digital products, and flyer designs. Browse the work and open a live project or enlarge a flyer sample.
             </p>
           </div>
@@ -54,25 +54,25 @@ function Work() {
           {groupedProjects.map((project, index) => (
             <Fragment key={project.id}>
               {index === 0 && (
-                <div className="col-span-full border-b border-white/10 pb-3 pt-2">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-amber-300">Digital work</p>
-                  <h2 className="mt-1 text-xl font-semibold text-white">Websites &amp; Web Apps</h2>
+                <div className="col-span-full border-b border-gray-200 pb-3 pt-2">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">Digital work</p>
+                  <h2 className="mt-1 text-xl font-semibold text-gray-900">Websites &amp; Web Apps</h2>
                 </div>
               )}
               {index === websiteProjects.length && flyerProjects.length > 0 && (
-                <div className="col-span-full mt-5 border-y border-amber-300/30 py-5 sm:py-6">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-amber-300">Visual design · {flyerProjects.length} samples</p>
-                  <h2 className="mt-1 text-2xl font-semibold text-white">Flyer Design</h2>
-                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-300">
+                <div className="col-span-full mt-5 border-y border-amber-200 py-5 sm:py-6">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-amber-700">Visual design · {flyerProjects.length} samples</p>
+                  <h2 className="mt-1 text-2xl font-semibold text-gray-900">Flyer Design</h2>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-gray-600">
                     Promotional graphics and custom flyer concepts. Select a sample to view it larger.
                   </p>
                 </div>
               )}
-              <article className="min-w-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
+              <article className="min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm">
               <button
                 type="button"
                 onClick={() => setSelectedImage({ image: project.image, title: project.title })}
-                className="block w-full cursor-pointer overflow-hidden bg-black/30 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-300"
+                className="block w-full cursor-pointer overflow-hidden bg-gray-100 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-600"
                 aria-label={`Enlarge image for ${project.title}`}
               >
                 <div className="aspect-[16/10] w-full">
@@ -86,36 +86,36 @@ function Work() {
 
               <div className="p-5 sm:p-6">
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-amber-300">{project.status}</span>
-                  <span className="text-xs text-gray-400">{project.duration}</span>
+                  <span className="text-xs font-semibold uppercase tracking-wide text-amber-700">{project.status}</span>
+                  <span className="text-xs text-gray-500">{project.duration}</span>
                 </div>
                 <h2 className="text-xl font-semibold mb-1">{project.title}</h2>
-                <p className="text-sm text-gray-300 mb-4">{project.subtitle}</p>
-                <p className="text-sm leading-relaxed text-gray-300 mb-5">{project.longDescription}</p>
+                <p className="text-sm text-gray-600 mb-4">{project.subtitle}</p>
+                <p className="text-sm leading-relaxed text-gray-700 mb-5">{project.longDescription}</p>
 
                 <div className="mb-5">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-2">Highlights</h3>
-                  <ul className="space-y-1.5 text-sm text-gray-300">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Highlights</h3>
+                  <ul className="space-y-1.5 text-sm text-gray-700">
                     {project.features.map((feature) => <li key={feature}>{feature}</li>)}
                   </ul>
                 </div>
 
                 <div className="flex flex-wrap gap-2 mb-5">
                   {project.technologies.map((technology) => (
-                    <span key={technology} className="rounded bg-white/10 px-2.5 py-1 text-xs text-gray-200">
+                    <span key={technology} className="rounded bg-gray-100 px-2.5 py-1 text-xs text-gray-700">
                       {technology}
                     </span>
                   ))}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 border-t border-white/10 pt-4">
+                <div className="flex flex-wrap items-center gap-3 border-t border-gray-200 pt-4">
                   {project.demo && (
-                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-amber-300 px-4 py-2 text-sm font-semibold text-gray-950 transition-colors hover:bg-amber-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300">
+                    <a href={project.demo} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-amber-300 px-4 py-2 text-sm font-semibold text-gray-950 transition-colors hover:bg-amber-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600">
                       Visit project <span aria-hidden="true">↗</span>
                     </a>
                   )}
                   {project.github && (
-                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300">
+                    <a href={project.github} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600">
                       View source <span aria-hidden="true">↗</span>
                     </a>
                   )}
@@ -123,7 +123,7 @@ function Work() {
                     <button
                       type="button"
                       onClick={() => setSelectedImage({ image: project.image, title: project.title })}
-                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-white/20 px-4 py-2 text-sm font-medium text-gray-200 transition-colors hover:border-white/50 hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-300"
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:border-gray-400 hover:bg-gray-50 hover:text-gray-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600"
                     >
                       View flyer <span aria-hidden="true">⤢</span>
                     </button>
