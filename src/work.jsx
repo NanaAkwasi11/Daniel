@@ -111,7 +111,7 @@ function Work() {
                 <div className="flex flex-wrap items-center gap-3 border-t border-gray-200 pt-4">
                   {project.demo && (
                     <a href={project.demo} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-amber-300 px-4 py-2 text-sm font-semibold text-gray-950 transition-colors hover:bg-amber-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600">
-                      Visit website <span aria-hidden="true">↗</span>
+                      {project.title === 'MindMate' ? 'Visit web app' : 'Visit website'} <span aria-hidden="true">↗</span>
                     </a>
                   )}
                   {project.github && (
