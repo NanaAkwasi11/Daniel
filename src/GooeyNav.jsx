@@ -114,7 +114,7 @@ const GooeyNav = ({
     textRef.current.innerText = element.innerText;
   };
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((isOpen) => !isOpen);
   };
 
   const getSectionIdFromHref = (href = '') => {
@@ -151,7 +151,8 @@ const GooeyNav = ({
     if (sectionId === 'home') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (targetElement) {
-      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const targetTop = targetElement.getBoundingClientRect().top + window.scrollY - 80;
+      window.scrollTo({ top: targetTop, behavior: 'smooth' });
     }
 
     if (filterRef.current) {
@@ -202,36 +203,14 @@ const GooeyNav = ({
 
   // Close mobile menu when clicking on the backdrop
   useEffect(() => {
-    const handleBackdropClick = (event) => {
-      // Close menu if clicking on the backdrop (not on menu items)
-      if (event.target.classList.contains('bg-black') && event.target.classList.contains('bg-opacity-95')) {
-        setIsMobileMenuOpen(false);
-      }
-    };
+    if (!isMobileMenuOpen) return undefined;
 
-    if (isMobileMenuOpen) {
-      document.addEventListener('click', handleBackdropClick);
-      document.addEventListener('touchstart', handleBackdropClick);
-      // Prevent body scroll when menu is open
-      document.body.classList.add('menu-open');
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-    } else {
-      // Restore body scroll when menu is closed
-      document.body.classList.remove('menu-open');
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'unset';
-    }
-
+    const previousOverflow = document.body.style.overflow;
+    document.body.classList.add('menu-open');
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.removeEventListener('click', handleBackdropClick);
-      document.removeEventListener('touchstart', handleBackdropClick);
       document.body.classList.remove('menu-open');
-      document.body.style.overflow = 'unset';
-      document.body.style.position = 'unset';
-      document.body.style.width = 'unset';
+      document.body.style.overflow = previousOverflow;
     };
   }, [isMobileMenuOpen]);
 
@@ -464,8 +443,6 @@ const GooeyNav = ({
           /* Prevent scrolling when menu is open */
           body.menu-open {
             overflow: hidden !important;
-            position: fixed !important;
-            width: 100% !important;
           }
 
           /* Ensure mobile hamburger button is always visible on mobile */
@@ -569,6 +546,9 @@ const GooeyNav = ({
             onClick={toggleMobileMenu}
             className="mobile-hamburger-btn fixed top-4 right-4 z-[70] flex items-center justify-center w-14 h-14 bg-gradient-to-br from-gray-900 via-black to-gray-800 backdrop-blur-md rounded-xl border-2 border-yellow-400 border-opacity-60 hover:border-opacity-100 transition-all duration-300 shadow-2xl hover:shadow-yellow-400/40 active:scale-95 md:hidden"
             aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-navigation-menu"
+            type="button"
             style={{
               position: 'fixed',
               top: '1rem',
@@ -613,6 +593,7 @@ const GooeyNav = ({
 
           {/* Sliding Menu Panel */}
           <div
+            id="mobile-navigation-menu"
             className={`mobile-menu-panel w-full transform transition-transform duration-500 ease-in-out ${
               isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
