@@ -127,8 +127,8 @@ const TechIcon = ({ name, color }) => {
 };
 
 export default function Skills() {
-  const [titleRef, titleVisible] = useScrollAnimation('skills');
-  const [skillsRef, skillsVisible] = useScrollAnimation('skills', 0.01);
+  const [titleRef, titleVisible] = useScrollAnimation('skills', 0.2, '0px 0px -50px 0px', true);
+  const [skillsRef, skillsVisible] = useScrollAnimation('skills', 0.01, '0px 0px -50px 0px', true);
   const [activeTab, setActiveTab] = useState('All');
 
   const skillGroups = [
