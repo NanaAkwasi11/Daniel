@@ -10,6 +10,7 @@ import adomaOneImage from './assets/adoma 1.png';
 import adomaTwoImage from './assets/adoma 2.png';
 import ceremonyFlyerImage from './assets/Naming ceremony.png';
 import revOscarFlyerImage from './assets/REV oscar.png';
+import emmanuelBirthdayFlyerImage from './assets/Emmanuel Acheampong’s 26th Birthday Celebration.png';
 
 export const projectEntries = [
   {
@@ -200,5 +201,21 @@ export const workOnlyEntries = [
     duration: "Graphic design",
     features: ["Poster Artwork", "Visual Storytelling", "Custom Design"],
     color: "from-teal-500 to-cyan-600"
+  },
+  {
+    id: 13,
+    title: "Emmanuel Acheampong’s 26th Birthday Celebration",
+    subtitle: "Birthday Celebration Flyer",
+    description: "A custom birthday celebration flyer designed for Emmanuel Acheampong’s 26th birthday.",
+    longDescription: "A celebratory birthday flyer featuring custom visuals and event details to create a memorable invitation for Emmanuel Acheampong’s 26th birthday.",
+    technologies: ["Graphic Design", "Flyer Design", "Birthday Celebration"],
+    image: emmanuelBirthdayFlyerImage,
+    isFlyer: true,
+    github: "",
+    demo: "",
+    status: "Design Sample",
+    duration: "Graphic design",
+    features: ["Birthday Celebration", "Custom Event Flyer", "Promotional Visual"],
+    color: "from-pink-500 to-rose-600"
   }
 ];
