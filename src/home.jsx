@@ -29,9 +29,12 @@ function Home() {
       {/* Custom Animation Styles */}
       <style>
         {`
+          /* Start only 100px off position: if an element starts fully off-screen
+             (e.g. 100% on a phone) the scroll observer never sees it and it
+             never appears. These styles are also used by the Projects section. */
           @keyframes slideInLeft {
             0% {
-              transform: translateX(-100%);
+              transform: translateX(-100px);
               opacity: 0;
             }
             100% {
@@ -42,7 +45,7 @@ function Home() {
 
           @keyframes slideInRight {
             0% {
-              transform: translateX(100%);
+              transform: translateX(100px);
               opacity: 0;
             }
             100% {
@@ -53,23 +56,24 @@ function Home() {
 
           .animate-slide-in-left {
             opacity: 0;
-            transform: translateX(-100%);
+            transform: translateX(-100px);
             transition: opacity 0.1s ease, transform 0.1s ease;
           }
 
           .animate-slide-in-left.visible {
             animation: slideInLeft 1.2s ease-out forwards;
+            animation-delay: 0.3s;
           }
 
           .animate-slide-in-right {
             opacity: 0;
-            transform: translateX(100%);
+            transform: translateX(100px);
             transition: opacity 0.1s ease, transform 0.1s ease;
           }
 
           .animate-slide-in-right.visible {
             animation: slideInRight 1.2s ease-out forwards;
-            animation-delay: 0.3s;
+            animation-delay: 0.6s;
           }
         `}
       </style>
