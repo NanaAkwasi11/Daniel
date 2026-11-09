@@ -5,7 +5,7 @@ import talentedBrainzImage from './assets/talented.PNG';
 import jassanImage from './assets/jassn.PNG';
 import mindMateImage from './assets/mindmate.png';
 import greenfieldImage from './assets/greenfled.png';
-import techNovaImage from './assets/technova.png';
+import techNovaImage from './assets/laptop.PNG';
 import danielFlyerImage from './assets/daniel.jpeg';
 import emmaFlyerImage from './assets/emma.png';
 import adomaOneImage from './assets/adoma 1.png';
