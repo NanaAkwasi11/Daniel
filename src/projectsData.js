@@ -1,5 +1,6 @@
 import travelersReviewImage from './assets/travelersreview.png';
 import africaOshImage from './assets/african.PNG';
+import sarvidaImage from './assets/sarvida.png';
 import talentedBrainzImage from './assets/talented.PNG';
 import jassanImage from './assets/jassn.PNG';
 import mindMateImage from './assets/mindmate.png';
@@ -43,6 +44,21 @@ export const projectEntries = [
     duration: "Community platform",
     features: ["Open Science Advocacy", "Summits & Events", "Innovation Network", "Strategic Partnerships"],
     color: "from-emerald-500 to-teal-600"
+  },
+  {
+    id: 15,
+    title: "Sarvida Kente House",
+    subtitle: "Authentic Bonwire Kente E-Commerce Store",
+    description: "A premium, mobile-first online store selling authentic handwoven Kente cloth from Bonwire, Ghana, for weddings, ceremonies and everyday celebration.",
+    longDescription: "Sarvida Kente House brings authentic Bonwire Kente to customers wherever they are. Shoppers can browse collections, explore the heritage behind each weave, save favourites, and check out as a guest or with an optional account that keeps delivery details, order history and tracking in one place.",
+    technologies: ["React", "TanStack Start", "Tailwind CSS", "Vercel", "E-Commerce"],
+    image: sarvidaImage,
+    github: "",
+    demo: "https://sarvida-kente-house.vercel.app/",
+    status: "Live",
+    duration: "E-commerce website",
+    features: ["Kente Collections & Shop", "Guest & Account Checkout", "Order Tracking", "Heritage Storytelling"],
+    color: "from-amber-500 to-red-700"
   },
   {
     id: 2,
