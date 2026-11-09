@@ -1,96 +1,132 @@
 import useScrollAnimation from './useScrollAnimation';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { submitContactForm } from './supabaseClient';
 
-const PHONE = '+233599739719';
-
-const contactMethods = [
-  {
-    id: 'email',
-    label: 'Email',
-    value: 'kyemdaniel23@gmail.com',
-    note: 'I reply within 24 hours',
-    action: 'mailto:kyemdaniel23@gmail.com',
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="M3 7l9 6 9-6" />
-      </svg>
-    ),
-  },
-  {
-    id: 'whatsapp',
-    label: 'WhatsApp',
-    value: '+233 599 739 719',
-    note: 'Chat about your project',
-    action: 'https://wa.me/233599739719',
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M12 2.2A9.8 9.8 0 003.6 17l-1.4 4.8 4.9-1.3A9.8 9.8 0 1012 2.2zm0 17.9a8.1 8.1 0 01-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8.1 8.1 0 1112 20.1zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.6 6.6 0 01-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2c0 1.3.9 2.5 1.1 2.7.1.2 1.8 2.8 4.4 3.9 1.6.7 2.3.8 3.1.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'phone',
-    label: 'Phone',
-    value: '0599739719 · 0540743641',
-    note: 'Call to talk it through',
-    action: `tel:${PHONE}`,
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 16.9v3a2 2 0 01-2.2 2 19.8 19.8 0 01-8.6-3.1 19.5 19.5 0 01-6-6A19.8 19.8 0 012.1 4.2 2 2 0 014.1 2h3a2 2 0 012 1.7c.1 1 .4 1.9.7 2.8a2 2 0 01-.5 2.1L8 9.9a16 16 0 006 6l1.3-1.3a2 2 0 012.1-.4c.9.3 1.8.6 2.8.7a2 2 0 011.7 2z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'linkedin',
-    label: 'LinkedIn',
-    value: 'Connect with me',
-    note: 'Professional opportunities',
-    action: 'https://www.linkedin.com/feed/',
-    icon: (
-      <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
-        <path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 110-4.2 2.1 2.1 0 010 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z" />
-      </svg>
-    ),
-  },
-];
-
-const subjects = ['General Inquiry', 'Project Collaboration', 'Job Opportunity', 'Freelance Work', 'Other'];
-
-const inputClass =
-  'w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-slate-500 transition focus:border-yellow-400 focus:bg-white/[0.07] focus:outline-none focus:ring-2 focus:ring-yellow-400/30';
-
 function Contact() {
-  const [headRef, headVisible] = useScrollAnimation('contact');
-  const [bodyRef, bodyVisible] = useScrollAnimation('contact', 0.05);
+  const [titleRef, titleVisible] = useScrollAnimation('contact');
+  const [cardsRef, cardsVisible] = useScrollAnimation('contact');
+  const [formRef, formVisible] = useScrollAnimation('contact');
 
-  const [formData, setFormData] = useState({ name: '', email: '', message: '', subject: 'General Inquiry' });
+  const [activeCard, setActiveCard] = useState(0);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+    subject: 'General Inquiry'
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
-  const [copiedPhone, setCopiedPhone] = useState(false);
+  const [copiedPhone, setCopiedPhone] = useState('');
 
-  // On desktop a tel: link usually does nothing, so copy the number instead.
-  const handlePhoneClick = async (event) => {
-    if (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) return;
+  const handlePhoneAction = async (method, event) => {
+    if (!method.action.startsWith('tel')) return;
+
     event.preventDefault();
-    try {
-      await navigator.clipboard?.writeText(PHONE);
-    } catch {
-      // Clipboard can be blocked; still show the number below.
+
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      window.location.href = method.action;
+      return;
     }
-    setCopiedPhone(true);
-    setTimeout(() => setCopiedPhone(false), 3000);
+
+    const number = '+233599739719';
+
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(number);
+      }
+      setCopiedPhone(number);
+      setTimeout(() => setCopiedPhone(''), 3000);
+    } catch {
+      setCopiedPhone(number);
+      setTimeout(() => setCopiedPhone(''), 3000);
+    }
   };
 
-  const handleInputChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Contact methods with interactive cards
+  const contactMethods = [
+    {
+      id: 'email',
+      title: 'Email Me',
+      subtitle: 'Quick Response',
+      description: 'Send me an email and I\'ll respond within 24 hours',
+      icon: '📧',
+      value: 'kyemdaniel23@gmail.com',
+      action: 'mailto:kyemdaniel23@gmail.com',
+      color: 'from-blue-500 to-cyan-500',
+      bgPattern: 'radial-gradient(circle at 20% 80%, #3b82f6 0%, transparent 50%)'
+    },
+    {
+      id: 'linkedin',
+      title: 'LinkedIn',
+      subtitle: 'Professional Network',
+      description: 'Connect with me on LinkedIn for professional opportunities',
+      icon: '💼',
+      value: 'linkedin.com/feed',
+      action: 'https://www.linkedin.com/feed/',
+      color: 'from-indigo-500 to-purple-500',
+      bgPattern: 'radial-gradient(circle at 80% 20%, #6366f1 0%, transparent 50%)'
+    },
+    {
+      id: 'whatsapp',
+      title: 'WhatsApp',
+      subtitle: 'Chat Directly',
+      description: 'Message me on WhatsApp to discuss your project',
+      icon: (
+        <svg className="h-10 w-10" viewBox="0 0 32 32" aria-hidden="true">
+          <path fill="#25D366" d="M16 2.5C8.54 2.5 2.5 8.54 2.5 16c0 2.37.62 4.6 1.7 6.54L2.5 29.5l7.15-1.67A13.43 13.43 0 0 0 16 29.5c7.46 0 13.5-6.04 13.5-13.5S23.46 2.5 16 2.5Z" />
+          <path fill="#fff" d="M22.1 19.1c-.33-.17-1.95-.96-2.25-1.07-.3-.11-.52-.17-.74.17-.22.33-.85 1.07-1.04 1.29-.19.22-.39.25-.72.08-.33-.17-1.4-.52-2.66-1.66-.98-.87-1.64-1.95-1.83-2.28-.19-.33-.02-.51.15-.68.15-.15.33-.39.5-.58.17-.19.22-.33.33-.55.11-.22.06-.41-.03-.58-.08-.17-.74-1.79-1.01-2.45-.27-.64-.54-.55-.74-.56h-.63c-.22 0-.58.08-.88.41-.3.33-1.15 1.12-1.15 2.74s1.18 3.18 1.34 3.4c.17.22 2.32 3.54 5.63 4.96.79.34 1.4.54 1.88.69.79.25 1.5.22 2.06.13.63-.09 1.95-.8 2.23-1.57.28-.77.28-1.43.19-1.57-.08-.14-.3-.22-.63-.39Z" />
+        </svg>
+      ),
+      value: '+233 599 739 719',
+      action: 'https://wa.me/233599739719',
+      color: 'from-green-500 to-emerald-500',
+      bgPattern: 'radial-gradient(circle at 50% 50%, #22c55e 0%, transparent 50%)'
+    },
+    {
+      id: 'phone',
+      title: 'Call Me',
+      subtitle: 'Direct Discussion',
+      description: 'Call me directly to discuss your project in detail',
+      icon: '📞',
+      value: '0599739719 or 0540743641',
+      action: 'tel:+233599739719',
+      color: 'from-green-500 to-emerald-500',
+      bgPattern: 'radial-gradient(circle at 70% 30%, #10b981 0%, transparent 50%)'
+    }
+  ];
+
+  // Auto-rotate contact cards
+  useEffect(() => {
+    if (cardsVisible) {
+      const interval = setInterval(() => {
+        setActiveCard((prev) => (prev + 1) % contactMethods.length);
+      }, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [cardsVisible, contactMethods.length]);
+
+  const handleInputChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
+
     try {
-      const result = await submitContactForm(formData);
+      const result = await submitContactForm({
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+        subject: formData.subject
+      });
+
       if (result.success) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', message: '', subject: 'General Inquiry' });
@@ -101,173 +137,302 @@ function Contact() {
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
+
+      // Reset status after 5 seconds
       setTimeout(() => setSubmitStatus(null), 5000);
     }
   };
 
   return (
     <>
+      {/* Animation Styles */}
       <style>
         {`
-          .contact-reveal {
-            opacity: 0;
-            transform: translateY(32px);
-            transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+          @keyframes fadeInUp {
+            0% {
+              transform: translateY(50px);
+              opacity: 0;
+            }
+            100% {
+              transform: translateY(0);
+              opacity: 1;
+            }
           }
-          .contact-reveal.visible { opacity: 1; transform: none; }
-          @media (prefers-reduced-motion: reduce) {
-            .contact-reveal { opacity: 1; transform: none; transition: none; }
+
+          @keyframes scaleIn {
+            0% {
+              transform: scale(0.8) rotate(-5deg);
+              opacity: 0;
+            }
+            100% {
+              transform: scale(1) rotate(0deg);
+              opacity: 1;
+            }
+          }
+
+          @keyframes slideInUp {
+            0% {
+              transform: translateY(100px);
+              opacity: 0;
+            }
+            100% {
+              transform: translateY(0);
+              opacity: 1;
+            }
+          }
+
+          @keyframes pulse {
+            0%, 100% {
+              transform: scale(1);
+            }
+            50% {
+              transform: scale(1.05);
+            }
+          }
+
+          .animate-fade-in-up {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.1s ease, transform 0.1s ease;
+          }
+
+          .animate-fade-in-up.visible {
+            animation: fadeInUp 1s ease-out forwards;
+          }
+
+          .animate-scale-in {
+            opacity: 0;
+            transform: scale(0.8) rotate(-5deg);
+            transition: opacity 0.1s ease, transform 0.1s ease;
+          }
+
+          .animate-scale-in.visible {
+            animation: scaleIn 0.8s ease-out forwards;
+          }
+
+          .animate-slide-up {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: opacity 0.1s ease, transform 0.1s ease;
+          }
+
+          .animate-slide-up.visible {
+            animation: slideInUp 1s ease-out forwards;
+          }
+
+          .contact-card-active {
+            animation: pulse 2s infinite;
           }
         `}
       </style>
 
-      <section id="contact" className="relative overflow-hidden bg-slate-950 pt-24 text-white md:pt-36">
-        <div aria-hidden="true" className="pointer-events-none absolute -left-40 top-20 h-96 w-96 rounded-full bg-yellow-400/10 blur-3xl" />
-        <div aria-hidden="true" className="pointer-events-none absolute -right-40 bottom-40 h-96 w-96 rounded-full bg-blue-500/10 blur-3xl" />
+      <section id="contact" className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white py-20 md:pt-32 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-full h-full" style={{
+            backgroundImage: `
+              radial-gradient(circle at 25% 25%, #fbbf24 0%, transparent 50%),
+              radial-gradient(circle at 75% 75%, #3b82f6 0%, transparent 50%),
+              radial-gradient(circle at 50% 50%, #8b5cf6 0%, transparent 50%)
+            `
+          }}></div>
+        </div>
 
-        <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          {/* Heading */}
-          <div ref={headRef} className={`contact-reveal ${headVisible ? 'visible' : ''} mx-auto mb-14 max-w-2xl text-center md:mb-16`}>
-            <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-yellow-400 sm:text-sm">
-              <span className="h-px w-8 bg-yellow-400" />
-              Contact
-              <span className="h-px w-8 bg-yellow-400" />
-            </p>
-            <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">
-              Let's build something <span className="text-yellow-400">together</span>
-            </h2>
-            <p className="mt-4 text-base text-slate-400 sm:text-lg">
-              Need a website, a web app or a flyer for your next event? Tell me about it and I'll get back to you.
-            </p>
-          </div>
+        <div className="w-screen max-w-none px-0 sm:px-4 relative z-10" style={{ width: '100vw' }}>
+          <h2
+            ref={titleRef}
+            className={`text-xl sm:text-2xl lg:text-4xl font-bold text-center mb-4 sm:mb-8 lg:mb-16 animate-fade-in-up ${titleVisible ? 'visible' : ''}`}
+          >
+            Let's Work Together
+          </h2>
 
-          <div ref={bodyRef} className={`contact-reveal ${bodyVisible ? 'visible' : ''} grid gap-8 lg:grid-cols-5 lg:gap-10`}>
-            {/* Contact methods */}
-            <div className="space-y-3 lg:col-span-2">
-              {contactMethods.map((m) => {
-                const external = m.action.startsWith('http');
-                const isPhone = m.id === 'phone';
+          {/* Interactive Contact Cards */}
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 mb-16">
+            <div
+              ref={cardsRef}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+            >
+              {contactMethods.map((method, index) => {
+                const isExternalLink = method.action.startsWith('http');
+                const isTelLink = method.action.startsWith('tel');
+                const isMailLink = method.action.startsWith('mailto');
+
                 return (
                   <a
-                    key={m.id}
-                    href={m.action}
-                    target={external ? '_blank' : undefined}
-                    rel={external ? 'noopener noreferrer' : undefined}
-                    onClick={isPhone ? handlePhoneClick : undefined}
-                    className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-yellow-400/40 hover:bg-white/[0.06] sm:p-5"
+                    key={method.id}
+                    href={method.action}
+                    target={isExternalLink ? '_blank' : undefined}
+                    rel={isExternalLink ? 'noreferrer' : undefined}
+                    className={`relative group block cursor-pointer animate-scale-in ${cardsVisible ? 'visible' : ''} ${
+                      activeCard === index ? 'contact-card-active' : ''
+                    }`}
+                    style={{ animationDelay: `${index * 0.2}s` }}
+                    onClick={(e) => {
+                      if (isTelLink) {
+                        handlePhoneAction(method, e);
+                        return;
+                      }
+
+                      if (!isExternalLink && !isMailLink && !isTelLink) {
+                        e.preventDefault();
+                        document.querySelector('#contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (isTelLink) {
+                          handlePhoneAction(method, e);
+                          return;
+                        }
+                        if (!isExternalLink && !isMailLink && !isTelLink) {
+                          document.querySelector('#contact-form')?.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }
+                    }}
                   >
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-yellow-400/10 text-yellow-400 transition group-hover:bg-yellow-400 group-hover:text-slate-900">
-                      {m.icon}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-xs font-semibold uppercase tracking-wider text-slate-500">{m.label}</span>
-                      <span className="block truncate font-semibold text-white">{m.value}</span>
-                      <span className="block text-sm text-slate-400">
-                        {isPhone && copiedPhone ? <span className="text-emerald-400">Number copied to clipboard</span> : m.note}
-                      </span>
-                    </span>
-                    <svg className="h-5 w-5 shrink-0 text-slate-600 transition group-hover:translate-x-0.5 group-hover:text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M9 6l6 6-6 6" />
-                    </svg>
+                    <div className="relative p-6 bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 h-full">
+                      <div className="absolute inset-0 rounded-xl opacity-20" style={{
+                        background: method.bgPattern
+                      }}></div>
+
+                      <div className="relative z-10">
+                        <div className="text-4xl mb-4">{method.icon}</div>
+                        <h3 className="text-xl font-bold mb-2">{method.title}</h3>
+                        <p className="text-sm text-white/70 mb-3">{method.subtitle}</p>
+                        <p className="text-white/90 text-sm mb-4">{method.description}</p>
+                        <p className="text-xs text-white/60 font-mono">{method.value}</p>
+                        {isTelLink && copiedPhone && (
+                          <p className="mt-3 text-[11px] text-emerald-300 font-medium">
+                            Phone number copied — call {copiedPhone} manually.
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
+                          <span className="text-xs">→</span>
+                        </div>
+                      </div>
+                    </div>
                   </a>
                 );
               })}
-
-              <div className="flex items-center gap-3 rounded-2xl border border-emerald-400/20 bg-emerald-400/5 p-4 text-sm text-emerald-300">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
-                </span>
-                Available for freelance and remote work
-              </div>
             </div>
+          </div>
 
-            {/* Form */}
-            <div id="contact-form" className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 lg:col-span-3">
-              <h3 className="text-xl font-bold sm:text-2xl">Send me a message</h3>
-              <p className="mt-1 text-sm text-slate-400">Fill in the form and it lands straight in my inbox.</p>
+          {/* Enhanced Contact Form */}
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div
+              ref={formRef}
+              id="contact-form"
+              className={`bg-white/10 backdrop-blur-lg rounded-2xl p-8 lg:p-12 border border-white/20 animate-slide-up ${formVisible ? 'visible' : ''}`}
+            >
+              <div className="text-center mb-8">
+                <h3 className="text-2xl lg:text-3xl font-bold mb-4">Send Me a Message</h3>
+                <p className="text-white/80">Have a project in mind? Let's discuss how we can work together.</p>
+              </div>
 
-              <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
-                <div className="flex flex-col gap-5 sm:flex-row">
-                  <div className="flex-1">
-                    <label htmlFor="name" className="mb-2 block text-sm font-medium text-slate-300">Full name</label>
-                    <input type="text" id="name" name="name" autoComplete="name" value={formData.name} onChange={handleInputChange} required className={inputClass} placeholder="Your full name" />
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium mb-2">Full Name</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all duration-300 placeholder-white/50"
+                      placeholder="Your full name"
+                    />
                   </div>
-                  <div className="flex-1">
-                    <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-300">Email address</label>
-                    <input type="email" id="email" name="email" autoComplete="email" value={formData.email} onChange={handleInputChange} required className={inputClass} placeholder="you@example.com" />
+
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium mb-2">Email Address</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all duration-300 placeholder-white/50"
+                      placeholder="your.email@example.com"
+                    />
                   </div>
                 </div>
 
                 <div>
-                  <span className="mb-2 block text-sm font-medium text-slate-300">What's it about?</span>
-                  <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Subject">
-                    {subjects.map((s) => (
-                      <button
-                        key={s}
-                        type="button"
-                        role="radio"
-                        aria-checked={formData.subject === s}
-                        onClick={() => setFormData({ ...formData, subject: s })}
-                        className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                          formData.subject === s
-                            ? 'bg-yellow-400 text-slate-900'
-                            : 'bg-white/5 text-slate-300 ring-1 ring-white/10 hover:bg-white/10'
-                        }`}
-                      >
-                        {s}
-                      </button>
-                    ))}
-                  </div>
+                  <label htmlFor="subject" className="block text-sm font-medium mb-2">Subject</label>
+                  <select
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all duration-300 text-white"
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: 'white'
+                    }}
+                  >
+                    <option value="General Inquiry" style={{ backgroundColor: '#1f2937', color: 'white' }}>General Inquiry</option>
+                    <option value="Project Collaboration" style={{ backgroundColor: '#1f2937', color: 'white' }}>Project Collaboration</option>
+                    <option value="Job Opportunity" style={{ backgroundColor: '#1f2937', color: 'white' }}>Job Opportunity</option>
+                    <option value="Freelance Work" style={{ backgroundColor: '#1f2937', color: 'white' }}>Freelance Work</option>
+                    <option value="Other" style={{ backgroundColor: '#1f2937', color: 'white' }}>Other</option>
+                  </select>
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="mb-2 block text-sm font-medium text-slate-300">Message</label>
-                  <textarea id="message" name="message" rows="5" value={formData.message} onChange={handleInputChange} required className={`${inputClass} resize-none`} placeholder="Tell me about your project or idea..." />
+                  <label htmlFor="message" className="block text-sm font-medium mb-2">Message</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    rows="6"
+                    required
+                    className="w-full px-4 py-3 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all duration-300 placeholder-white/50 resize-none"
+                    placeholder="Tell me about your project or inquiry..."
+                  ></textarea>
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-yellow-400 py-4 text-base font-semibold text-slate-900 transition hover:bg-yellow-300 disabled:cursor-not-allowed disabled:opacity-60"
+                  className={`w-full py-4 rounded-lg font-semibold text-lg transition-all duration-300 ${
+                    isSubmitting
+                      ? 'bg-white/20 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105'
+                  }`}
                 >
                   {isSubmitting ? (
-                    <>
-                      <span className="h-5 w-5 animate-spin rounded-full border-2 border-slate-900/30 border-t-slate-900" />
+                    <div className="flex items-center justify-center gap-2">
+                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       Sending...
-                    </>
+                    </div>
                   ) : (
-                    <>
-                      Send message
-                      <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /></svg>
-                    </>
+                    'Send Message'
                   )}
                 </button>
 
-                <div aria-live="polite">
-                  {submitStatus === 'success' && (
-                    <p className="rounded-xl border border-emerald-400/30 bg-emerald-400/10 p-4 text-center text-sm text-emerald-300">
-                      Message sent! I'll get back to you soon.
-                    </p>
-                  )}
-                  {submitStatus === 'error' && (
-                    <p className="rounded-xl border border-red-400/30 bg-red-400/10 p-4 text-center text-sm text-red-300">
-                      Couldn't send your message. Please try again or reach me by email or WhatsApp.
-                    </p>
-                  )}
-                </div>
+                {submitStatus === 'success' && (
+                  <div className="text-center p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
+                    <p className="text-green-300">✅ Message sent successfully! I'll get back to you soon.</p>
+                  </div>
+                )}
+
+                {submitStatus === 'error' && (
+                  <div className="text-center p-4 bg-red-500/20 border border-red-500/30 rounded-lg">
+                    <p className="text-red-300">❌ Failed to send message. Please try again or contact me directly.</p>
+                  </div>
+                )}
               </form>
             </div>
           </div>
         </div>
-
-        {/* Footer */}
-        <footer className="relative mt-24 border-t border-white/10">
-          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-8 text-sm text-slate-500 sm:flex-row sm:px-6 lg:px-8">
-            <p>© {new Date().getFullYear()} Daniel Osei Kyem. All rights reserved.</p>
-            <p>Designed &amp; built by Daniel</p>
-          </div>
-        </footer>
       </section>
     </>
   );

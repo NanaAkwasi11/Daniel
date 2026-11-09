@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import useScrollAnimation from './useScrollAnimation';
 
 // Crisp SVG technology icons
@@ -197,41 +197,45 @@ export default function Skills() {
     : skillGroups.filter(g => g.category === activeTab);
 
   return (
-    <section id="skills" className="relative overflow-hidden bg-stone-50 py-24 text-slate-900 md:pt-36 md:pb-32">
-      <div aria-hidden="true" className="pointer-events-none absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-yellow-300/30 blur-3xl" />
-
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        {/* Heading */}
-        <div
+    <section id="skills" className="relative min-h-screen bg-gray-100 py-20 sm:py-28 text-slate-800 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        {/* Section Header */}
+        <div 
           ref={titleRef}
-          className={`mx-auto max-w-3xl text-center transition-all duration-700 ease-out ${
-            titleVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'
+          className={`text-center max-w-3xl mx-auto transition-all duration-700 ease-out ${
+            titleVisible !== false ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.25em] text-yellow-600 sm:text-sm">
-            <span className="h-px w-8 bg-yellow-500" />
-            Skills
-            <span className="h-px w-8 bg-yellow-500" />
-          </p>
-          <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl lg:text-5xl">My developer toolkit</h2>
-          <p className="mt-4 text-base leading-relaxed text-slate-600 sm:text-lg">
-            The tools I use to design, build and ship modern web products — from the interface down to the database.
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-slate-900 bg-white mb-3">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-900">
+              DEVELOPER TOOLKIT
+            </span>
+          </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-3">
+            Core Engineering Skills
+          </h2>
+          
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+            Designing and shipping modern web products with strong frontend craft, reliable backend systems, and scalable delivery workflows.
           </p>
 
-          {/* Filter tabs */}
-          <div role="tablist" aria-label="Skill categories" className="mt-8 inline-flex max-w-full flex-wrap justify-center gap-1 rounded-2xl border border-slate-200 bg-white p-1.5 shadow-sm">
+          {/* Category Filter Pills with explicit high-contrast inline styles */}
+          <div className="flex flex-wrap items-center justify-center gap-2.5 mt-8">
             {categories.map((cat) => {
               const isSelected = activeTab === cat;
               return (
                 <button
                   key={cat}
                   type="button"
-                  role="tab"
-                  aria-selected={isSelected}
                   onClick={() => setActiveTab(cat)}
-                  className={`rounded-xl px-4 py-2 text-xs font-semibold transition sm:text-sm ${
-                    isSelected ? 'bg-slate-900 text-white shadow' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                  }`}
+                  style={{
+                    backgroundColor: isSelected ? '#0f172a' : '#ffffff',
+                    color: isSelected ? '#ffffff' : '#0f172a',
+                    borderColor: '#0f172a',
+                  }}
+                  className="px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 border-2 cursor-pointer shadow-sm hover:opacity-90"
                 >
                   {cat}
                 </button>
@@ -240,59 +244,67 @@ export default function Skills() {
           </div>
         </div>
 
-        {/* Cards */}
+        {/* Skills Cards Grid */}
         <div
           ref={skillsRef}
           className={`mt-12 transition-all duration-700 ease-out ${
-            skillsVisible ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-0'
+            skillsVisible !== false ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
-          <div className={`grid gap-6 ${filteredGroups.length === 1 ? 'mx-auto max-w-xl' : 'md:grid-cols-2'}`}>
+          <div className={`grid gap-6 ${
+            filteredGroups.length === 1 ? 'max-w-xl mx-auto grid-cols-1' : 'grid-cols-1 md:grid-cols-2 xl:grid-cols-4'
+          }`}>
             {filteredGroups.map((group) => (
               <div
                 key={group.category}
-                className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-yellow-300 hover:shadow-xl hover:shadow-yellow-500/10 sm:p-7"
+                className="group relative rounded-2xl border-2 border-slate-900 bg-white p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
               >
-                <div className="mb-6 flex items-baseline justify-between gap-4">
-                  <h3 className="text-xl font-bold text-slate-900">{group.category}</h3>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">{group.badge}</span>
+                <div className={`mb-4 h-1.5 w-full rounded-full bg-gradient-to-r ${group.accent}`} />
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-200">
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">{group.category}</h3>
+                    <p className="text-[11px] text-slate-600 font-medium mt-1 uppercase tracking-[0.12em]">
+                      {group.badge}
+                    </p>
+                  </div>
                 </div>
 
-                <ul className="space-y-5">
+                <div className="space-y-4">
                   {group.skills.map((skill) => (
-                    <li key={skill.name}>
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-50 ring-1 ring-slate-200">
-                          <TechIcon name={skill.name} color={skill.color} />
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-baseline justify-between gap-3">
-                            <span className="truncate text-sm font-semibold text-slate-900">{skill.name}</span>
-                            <span className="shrink-0 text-xs font-medium text-slate-500">{skill.level}</span>
+                    <div key={skill.name} className="space-y-2">
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-9 h-9 rounded-lg flex items-center justify-center bg-white border border-slate-900 shrink-0">
+                            <TechIcon name={skill.name} color={skill.color} />
                           </div>
-                          <div className="mt-0.5 truncate text-xs text-slate-500">{skill.tag}</div>
-                          <div
-                            className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-slate-100"
-                            role="progressbar"
-                            aria-label={`${skill.name} proficiency`}
-                            aria-valuenow={skill.percent}
-                            aria-valuemin={0}
-                            aria-valuemax={100}
-                          >
-                            <div
-                              className="h-full rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 transition-[width] duration-1000 ease-out"
-                              style={{ width: skillsVisible ? `${skill.percent}%` : '0%' }}
-                            />
+                          <div className="min-w-0">
+                            <div className="text-sm font-bold text-slate-900 truncate">{skill.name}</div>
+                            <div className="text-[11px] text-slate-600 font-medium truncate">{skill.tag}</div>
                           </div>
                         </div>
+                        <span className="text-[10px] font-bold px-2 py-1 rounded-md bg-slate-900 text-white whitespace-nowrap">
+                          {skill.level}
+                        </span>
                       </div>
-                    </li>
+
+                      <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-700 ease-out"
+                          style={{
+                            width: `${skill.percent}%`,
+                            backgroundColor: skill.color
+                          }}
+                        />
+                      </div>
+                    </div>
                   ))}
-                </ul>
+                </div>
               </div>
             ))}
           </div>
         </div>
+
+
       </div>
     </section>
   );
