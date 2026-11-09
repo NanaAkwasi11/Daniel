@@ -1,3 +1,4 @@
+import travelersReviewImage from './assets/travelersreview.png';
 import africaOshImage from './assets/african.PNG';
 import talentedBrainzImage from './assets/talented.PNG';
 import jassanImage from './assets/jassn.PNG';
@@ -13,6 +14,21 @@ import revOscarFlyerImage from './assets/REV oscar.png';
 import emmanuelBirthdayFlyerImage from './assets/Emmanuel Acheampong’s 26th Birthday Celebration.png';
 
 export const projectEntries = [
+  {
+    id: 14,
+    title: "Travelers Review",
+    subtitle: "Global Travel & Tourism Media Platform",
+    description: "A full-stack travel media platform for news, events, media and authentic traveller experiences and reviews, with member accounts and an admin console.",
+    longDescription: "Travelers Review brings together travel and tourism news, industry events, a video and photo media library, and a community where members share experiences and rate airlines, hotels and destinations. Members manage everything from a personal dashboard, and the team publishes and moderates from a dedicated admin console.",
+    technologies: ["React", "TanStack Start", "Supabase", "Tailwind CSS", "Vercel", "Resend"],
+    image: travelersReviewImage,
+    github: "",
+    demo: "https://www.travelersreview.com/",
+    status: "Live",
+    duration: "Media platform",
+    features: ["Cinematic Video Hero", "Member Accounts & Dashboard", "Admin Console & Moderation", "News, Events & Media"],
+    color: "from-blue-600 to-amber-500"
+  },
   {
     id: 1,
     title: "AfricaOSH",
