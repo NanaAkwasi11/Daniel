@@ -241,3 +241,13 @@ html, body {
     padding: 0.5rem 0.75rem !important;
   }
 }
+/* About section: keep headings readable on phones (overrides the global h2/h3 shrink above) */
+@media (max-width: 640px) {
+  #about h2 {
+    font-size: 1.875rem !important;
+    line-height: 1.15 !important;
+  }
+  #about h4 {
+    font-size: 1.125rem !important;
+  }
+}
